@@ -128,6 +128,8 @@ class TribesBattle(arcade.Window):
         self.londres.center_x = Londres.x
         self.londres.center_y = Londres.y
 
+        self.prod = 1
+
         self.scene = arcade.Scene.from_tilemap(self.tile_map)
         self.scene.add_sprite("warrior", self.warrior)
         self.scene.add_sprite("paris", self.paris)
@@ -183,7 +185,15 @@ class TribesBattle(arcade.Window):
         imgui.new_frame()
         imgui.begin("Ville")
         imgui.text(self.selected_city)
+        clicked, current = imgui.listbox(
+            "Production", self.prod, ["Guerrier", "Colon", "Lanceur de pierre"]
+        )
+        if clicked:
+            self.prod = current
+            print(self.prod)
+
         imgui.end()
+
         imgui.render()
         self.renderer.render(imgui.get_draw_data())
 
