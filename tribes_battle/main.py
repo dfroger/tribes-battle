@@ -3,75 +3,15 @@ from dataclasses import dataclass
 import imgui
 from arcade_imgui import ArcadeRenderer
 
-from . import units as u
-from .constant import *
-
-
-class Tile:
-    """
-       y j
-
-    3*DY   ┌────────┬───────┬───────┐
-           │        │       │       │
-         2 │        │       │       │
-           │        │       │       │
-    3*DY   ├────────NW──────NE──────┤
-           │        │       │       │
-         1 │        │   M   │       │
-           │        │       │       │
-      DY   ├────────SW──────SE──────┤
-           │        │       │       │
-         0 │        │       │       │
-           │        │       │       │
-       0   └────────┴───────┴───────┘
-                0       1       2         i
-           0        DX      2*DX    3*DX  x
-    """
-
-    i: int
-    j: int
-
-    w: int
-    e: int
-    x: int
-
-    s: int
-    n: int
-    y: int
-
-    def __init__(self, i: int, j: int):
-        self.i = i
-        self.j = j
-        self.compute_x()
-        self.compute_y()
-
-    @classmethod
-    def from_pixel(cls, x: int, y: int) -> "Tile":
-        i = x // c.DX
-        j = y // c.DY
-        return cls(i, j)
-
-    def compute_x(self):
-        self.w = self.i * c.DX
-        self.e = (self.i + 1) * c.DX
-        self.x = (self.w + self.e) // 2
-
-    def compute_y(self):
-        self.s = self.j * c.DY
-        self.n = (self.j + 1) * c.DY
-        self.y = (self.s + self.n) // 2
-
-    def __str__(self):
-        return f"Tile({self.i},{self.j})"
-
-    def __eq__(self, other) -> bool:
-        return self.i == other.i and self.j == other.j
+from . import constant as c
+from .tile import Tile
+from . import unit as u
 
 
 Paris = Tile(5, 5)
 Londres = Tile(27, 13)
 
-Units = []
+UNITS = [u.Unit(sprite=u.WARRIOR, tile=Tile(1, 3))]
 
 
 class TribesBattle(arcade.Window):
@@ -87,10 +27,6 @@ class TribesBattle(arcade.Window):
     def setup(self):
         layer_options = {"Terrain": {"use_spatial_hash": True}}
         self.tile_map = arcade.load_tilemap("map.json", c.TILE_SCALING, layer_options)
-        self.warrior = u.WARRIOR
-
-        self.warrior.center_x = 1.5 * c.DX
-        self.warrior.center_y = 3.5 * c.DY
 
         self.paris = arcade.Sprite(
             "sprites/cities.png",
@@ -117,21 +53,26 @@ class TribesBattle(arcade.Window):
         self.prod = 1
 
         self.scene = arcade.Scene.from_tilemap(self.tile_map)
-        self.scene.add_sprite("warrior", self.warrior)
+        self.scene.add_sprite_list("Units")
+        for unit in UNITS:
+            self.scene.add_sprite("Units", unit.sprite)
+
         self.scene.add_sprite("paris", self.paris)
         self.scene.add_sprite("londres", self.londres)
 
     def on_key_press(self, key, modifiers):
         """Called whenever a key is pressed."""
 
+        warrior = UNITS[0]
+
         if key == arcade.key.UP:
-            self.warrior.center_y += 30
+            warrior.to_up()
         elif key == arcade.key.DOWN:
-            self.warrior.center_y += -30
+            warrior.to_bottom()
         elif key == arcade.key.LEFT:
-            self.warrior.center_x += -30
+            warrior.to_left()
         elif key == arcade.key.RIGHT:
-            self.warrior.center_x += 30
+            warrior.to_right()
 
     def on_mouse_press(self, x: int, y: int, button: int, modifiers: int):
         tile = Tile.from_pixel(x, y)

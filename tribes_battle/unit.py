@@ -1,6 +1,7 @@
 import arcade
 
 from . import constant as c
+from .tile import Tile
 
 
 class Units: ...
@@ -23,6 +24,28 @@ WARRIOR = arcade.Sprite(
     image_width=c.DX,
     image_height=c.DY,
 )
+
+
+class Unit:
+    sprite: arcade.Sprite
+    tile: Tile
+
+    def __init__(self, sprite: arcade.Sprite, tile: Tile):
+        self.sprite = sprite
+        self.sprite.center_x = tile.x
+        self.sprite.center_y = tile.y
+
+    def to_up(self):
+        self.sprite.center_y += c.DY
+
+    def to_bottom(self):
+        self.sprite.center_y -= c.DY
+
+    def to_right(self):
+        self.sprite.center_x += c.DX
+
+    def to_left(self):
+        self.sprite.center_x -= c.DX
 
 
 """
