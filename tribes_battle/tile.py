@@ -67,7 +67,7 @@ class Tile:
         self.j += 1
         self.compute_y()
 
-    def bottom(self):
+    def down(self):
         self.j -= 1
         self.compute_y()
 

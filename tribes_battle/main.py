@@ -74,13 +74,13 @@ class TribesBattle(arcade.Window):
         warrior = UNITS[0]
 
         if key == arcade.key.UP:
-            warrior.to_up()
+            warrior.move_up()
         elif key == arcade.key.DOWN:
-            warrior.to_bottom()
+            warrior.move_down()
         elif key == arcade.key.LEFT:
-            warrior.to_left()
+            warrior.move_left()
         elif key == arcade.key.RIGHT:
-            warrior.to_right()
+            warrior.move_right()
 
     def on_mouse_press(self, x: int, y: int, button: int, modifiers: int):
         tile = Tile.from_pixel(x, y)
