@@ -6,6 +6,7 @@ from arcade_imgui import ArcadeRenderer
 SCREEN_WIDTH = 1000
 SCREEN_HEIGHT = 800
 SCREEN_TITLE = "Tribes battle"
+CITY_FONT_SIZE = 15
 
 TILE_SCALING = 1
 CHARACTER_SCALING = 1
@@ -72,6 +73,16 @@ class TribesBattle(arcade.Window):
     def on_draw(self):
         self.clear()
         self.scene.draw()
+
+        arcade.draw_text(
+            "Paris",
+            5.5 * dx,
+            4.5 * dy,
+            arcade.color.BLACK,
+            CITY_FONT_SIZE,
+            anchor_x="center",
+            anchor_y="bottom",
+        )
 
         imgui.new_frame()
         imgui.begin("Example: simple text")
