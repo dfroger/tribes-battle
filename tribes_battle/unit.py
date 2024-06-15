@@ -16,6 +16,16 @@ class DistanceUnit: ...
 class CivilUnit: ...
 
 
+WORKER = arcade.Sprite(
+    "sprites/units.png",
+    scale=c.SPRITE_SCALING,
+    image_x=14 * c.DX,
+    image_y=2 * c.DY,
+    image_width=c.DX,
+    image_height=c.DY,
+)
+
+
 WARRIOR = arcade.Sprite(
     "sprites/units.png",
     scale=c.SPRITE_SCALING,
@@ -30,22 +40,34 @@ class Unit:
     sprite: arcade.Sprite
     tile: Tile
 
-    def __init__(self, sprite: arcade.Sprite, tile: Tile):
+    def __init__(self, title: str, sprite: arcade.Sprite, tile: Tile):
+        self.title = title
         self.sprite = sprite
+        self.tile = tile
         self.sprite.center_x = tile.x
         self.sprite.center_y = tile.y
 
-    def to_up(self):
-        self.sprite.center_y += c.DY
+    def move_up(self):
+        self.tile.up()
+        self.sprite.center_y = self.tile.y
 
-    def to_bottom(self):
-        self.sprite.center_y -= c.DY
+    def move_down(self):
+        self.tile.down()
+        self.sprite.center_y = self.tile.y
 
-    def to_right(self):
-        self.sprite.center_x += c.DX
+    def move_right(self):
+        self.tile.right()
+        self.sprite.center_x = self.tile.x
 
-    def to_left(self):
-        self.sprite.center_x -= c.DX
+    def move_left(self):
+        self.tile.left()
+        self.sprite.center_x = self.tile.x
+
+    def __str__(self):
+        return f"Unit(tile={self.title}, i={self.tile.i}, j={self.tile.j})"
+
+    def __repr__(self):
+        return self.__str__()
 
 
 """

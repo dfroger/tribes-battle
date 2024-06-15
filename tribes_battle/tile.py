@@ -55,6 +55,22 @@ class Tile:
         self.n = (self.j + 1) * c.DY
         self.y = (self.s + self.n) // 2
 
+    def right(self):
+        self.i += 1
+        self.compute_x()
+
+    def left(self):
+        self.i -= 1
+        self.compute_x()
+
+    def up(self):
+        self.j += 1
+        self.compute_y()
+
+    def bottom(self):
+        self.j -= 1
+        self.compute_y()
+
     def __str__(self):
         return f"Tile({self.i},{self.j})"
 

@@ -6,12 +6,20 @@ from arcade_imgui import ArcadeRenderer
 from . import constant as c
 from .tile import Tile
 from . import unit as u
+from .unit import Unit
 
 
 Paris = Tile(5, 5)
 Londres = Tile(27, 13)
 
-UNITS = [u.Unit(sprite=u.WARRIOR, tile=Tile(1, 3))]
+UNITS = [
+    Unit(title="warior", sprite=u.WARRIOR, tile=Tile(6, 6)),
+    Unit(title="worker", sprite=u.WORKER, tile=Tile(6, 5)),
+]
+
+
+def find_units(tile: Tile) -> list[Unit]:
+    return [u for u in UNITS if u.tile == tile]
 
 
 class TribesBattle(arcade.Window):
@@ -76,6 +84,9 @@ class TribesBattle(arcade.Window):
 
     def on_mouse_press(self, x: int, y: int, button: int, modifiers: int):
         tile = Tile.from_pixel(x, y)
+        units = find_units(tile)
+        print(units)
+
         if tile == Paris:
             self.selected_city = "Paris"
         elif tile == Londres:
