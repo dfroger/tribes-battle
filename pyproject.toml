@@ -1,0 +1,26 @@
+[build-system]
+requires = ["setuptools >= 61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "tribes_battle"
+description = "A civilization-like in the acient times"
+keywords = ["game", "turn-based", "strategy", "civilization"]
+version = "0.1.0"
+authors = [
+  {name = "Maël Froger", email = "mael.froger@mailo.fr"},
+  {name = "David Froger", email = "david.froger@mailoo.org"},
+]
+dependencies = [
+  "arcade~=2.6.17",
+  "arcade-imgui~=0.3.0",
+]
+
+[tool.setuptools]
+packages = ["tribes_battle"]
+
+[project.urls]
+Repository = "https://github.com/dfroger/tribes-battle.git"
+
+[project.scripts]
+tribes-battle = "tribes_battle.main:main"

@@ -3,39 +3,29 @@ from dataclasses import dataclass
 import imgui
 from arcade_imgui import ArcadeRenderer
 
-# Constants
-SCREEN_WIDTH = 1000
-SCREEN_HEIGHT = 800
-SCREEN_TITLE = "Tribes battle"
-CITY_FONT_SIZE = 15
-
-TILE_SCALING = 1
-CHARACTER_SCALING = 1
-
-# sprites/ files
-dx = 30
-dy = 30
+from . import units as u
+from .constant import *
 
 
 class Tile:
     """
        y j
 
-    3*dy   ┌────────┬───────┬───────┐
+    3*DY   ┌────────┬───────┬───────┐
            │        │       │       │
          2 │        │       │       │
            │        │       │       │
-    3*dy   ├────────NW──────NE──────┤
+    3*DY   ├────────NW──────NE──────┤
            │        │       │       │
          1 │        │   M   │       │
            │        │       │       │
-      dy   ├────────SW──────SE──────┤
+      DY   ├────────SW──────SE──────┤
            │        │       │       │
          0 │        │       │       │
            │        │       │       │
        0   └────────┴───────┴───────┘
                 0       1       2         i
-           0        dx      2*dx    3*dx  x
+           0        DX      2*DX    3*DX  x
     """
 
     i: int
@@ -57,18 +47,18 @@ class Tile:
 
     @classmethod
     def from_pixel(cls, x: int, y: int) -> "Tile":
-        i = x // dx
-        j = y // dy
+        i = x // c.DX
+        j = y // c.DY
         return cls(i, j)
 
     def compute_x(self):
-        self.w = self.i * dx
-        self.e = (self.i + 1) * dx
+        self.w = self.i * c.DX
+        self.e = (self.i + 1) * c.DX
         self.x = (self.w + self.e) // 2
 
     def compute_y(self):
-        self.s = self.j * dy
-        self.n = (self.j + 1) * dy
+        self.s = self.j * c.DY
+        self.n = (self.j + 1) * c.DY
         self.y = (self.s + self.n) // 2
 
     def __str__(self):
@@ -81,11 +71,13 @@ class Tile:
 Paris = Tile(5, 5)
 Londres = Tile(27, 13)
 
+Units = []
+
 
 class TribesBattle(arcade.Window):
 
     def __init__(self):
-        super().__init__(SCREEN_WIDTH, SCREEN_HEIGHT, SCREEN_TITLE)
+        super().__init__(c.SCREEN_WIDTH, c.SCREEN_HEIGHT, c.SCREEN_TITLE)
         self.tile_map = None
         self.frame_count = 0
         self.selected_city = "Paris"
@@ -94,36 +86,30 @@ class TribesBattle(arcade.Window):
 
     def setup(self):
         layer_options = {"Terrain": {"use_spatial_hash": True}}
-        self.tile_map = arcade.load_tilemap("map.json", TILE_SCALING, layer_options)
-        self.warrior = arcade.Sprite(
-            "sprites/units.png",
-            scale=CHARACTER_SCALING,
-            image_x=18 * dx,
-            image_y=0 * dy,
-            image_width=dx,
-            image_height=dy,
-        )
-        self.warrior.center_x = 1.5 * dx
-        self.warrior.center_y = 3.5 * dy
+        self.tile_map = arcade.load_tilemap("map.json", c.TILE_SCALING, layer_options)
+        self.warrior = u.WARRIOR
+
+        self.warrior.center_x = 1.5 * c.DX
+        self.warrior.center_y = 3.5 * c.DY
 
         self.paris = arcade.Sprite(
             "sprites/cities.png",
-            scale=CHARACTER_SCALING,
-            image_x=0 * dx,
-            image_y=7 * dy,
-            image_width=dx,
-            image_height=dy,
+            scale=c.SPRITE_SCALING,
+            image_x=0 * c.DX,
+            image_y=7 * c.DY,
+            image_width=c.DX,
+            image_height=c.DY,
         )
         self.paris.center_x = Paris.x
         self.paris.center_y = Paris.y
 
         self.londres = arcade.Sprite(
             "sprites/cities.png",
-            scale=CHARACTER_SCALING,
-            image_x=0 * dx,
-            image_y=7 * dy,
-            image_width=dx,
-            image_height=dy,
+            scale=c.SPRITE_SCALING,
+            image_x=0 * c.DX,
+            image_y=7 * c.DY,
+            image_width=c.DX,
+            image_height=c.DY,
         )
         self.londres.center_x = Londres.x
         self.londres.center_y = Londres.y
@@ -165,9 +151,9 @@ class TribesBattle(arcade.Window):
         arcade.draw_text(
             "Paris",
             Paris.x,
-            Paris.y - dy,
+            Paris.y - c.DY,
             arcade.color.BLUE,
-            CITY_FONT_SIZE,
+            c.CITY_FONT_SIZE,
             anchor_x="center",
             anchor_y="bottom",
         )
@@ -175,9 +161,9 @@ class TribesBattle(arcade.Window):
         arcade.draw_text(
             "Londres",
             Londres.x,
-            Londres.y - dy,
+            Londres.y - c.DY,
             arcade.color.ORANGE,
-            CITY_FONT_SIZE,
+            c.CITY_FONT_SIZE,
             anchor_x="center",
             anchor_y="bottom",
         )
