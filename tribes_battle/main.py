@@ -1,3 +1,5 @@
+from uuid import UUID
+
 import arcade
 from dataclasses import dataclass
 import imgui
@@ -21,7 +23,7 @@ CITIES = [
         title="Paris", sprite=t.city_sprite(), tile=Tile(5, 5), color=arcade.color.BLUE
     ),
     City(
-        title="Londes",
+        title="Londres",
         sprite=t.city_sprite(),
         tile=Tile(27, 13),
         color=arcade.color.ORANGE,
@@ -41,12 +43,12 @@ def find_city(tile: Tile) -> City | None:
 
 
 class UICities:
+    # TODO: collapsing_header/tree_node for all cities
     def __init__(self):
         self.selected = "Paris"
         self.prod = 1
 
     def on_draw(self):
-        imgui.new_frame()
         imgui.begin("Ville")
         imgui.text(self.selected)
         clicked, current = imgui.listbox(
@@ -59,8 +61,15 @@ class UICities:
 
 
 class UIUnits:
+    selected: Unit | None
     def __init__(self):
-        self.selected = ""
+        self.selected = None
+
+    def on_draw(self):
+        imgui.begin("Unités")
+        if self.selected is not None:
+            imgui.text(self.selected.title)
+        imgui.end()
 
 
 class TribesBattle(arcade.Window):
@@ -89,6 +98,7 @@ class TribesBattle(arcade.Window):
             self.scene.add_sprite("Cities", city.sprite)
 
         self.ui_cities = UICities()
+        self.ui_units = UIUnits()
 
     def on_key_press(self, key, modifiers):
         """Called whenever a key is pressed."""
@@ -108,6 +118,8 @@ class TribesBattle(arcade.Window):
         tile = Tile.from_pixel(x, y)
         units = find_units(tile)
         print("units:", units)
+        if len(units) > 0:
+            self.ui_units.selected = units[0]
 
         city = find_city(tile)
         print("city:", city)
@@ -133,9 +145,11 @@ class TribesBattle(arcade.Window):
                 anchor_y="bottom",
             )
 
+        imgui.new_frame()
         self.ui_cities.on_draw()
-
+        self.ui_units.on_draw()
         imgui.render()
+
         self.renderer.render(imgui.get_draw_data())
 
 

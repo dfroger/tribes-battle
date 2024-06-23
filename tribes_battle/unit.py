@@ -1,3 +1,5 @@
+from uuid import UUID, uuid4
+
 import arcade
 
 from . import constant as c
@@ -39,6 +41,7 @@ WARRIOR = arcade.Sprite(
 class Unit:
     sprite: arcade.Sprite
     tile: Tile
+    id: UUID
 
     def __init__(self, title: str, sprite: arcade.Sprite, tile: Tile):
         self.title = title
@@ -46,6 +49,7 @@ class Unit:
         self.tile = tile
         self.sprite.center_x = tile.x
         self.sprite.center_y = tile.y
+        self.id = uuid4()
 
     def move_up(self):
         self.tile.up()
